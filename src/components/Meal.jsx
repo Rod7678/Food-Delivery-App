@@ -1,4 +1,4 @@
-export default function Meal({meals}){
+export default function Meal({meals, onSelectMeal}){
     // console.log(meals);
     return (
         <section >
@@ -10,7 +10,7 @@ export default function Meal({meals}){
                             <h3>{meal.name}</h3>
                             <p className="meal-item-price">${meal.price}</p>
                             <p className="meal-item-description">{meal.description}</p>
-                            <button className="meal-item-actions button">Add to cart</button>
+                            <button className="meal-item-actions button" onClick={()=>onSelectMeal(meal)}>Add to cart</button>
                         </div>
                     </li>
                 ))}
