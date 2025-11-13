@@ -1,35 +1,58 @@
 import Header from "./components/Header.jsx";
+import { OrderContext } from "./components/MealContext.jsx";
 import Products from "./components/Products.jsx";
 import useFetch from "./hooks/useFetch.js";
-import { fetchAvailableMeals, selectedOrders } from "./http.js";
+import { fetchAvailableMeals } from "./http.js";
 
 function App() {
-  const {fetchedData: userMeal, setFetchedData: setUserMeal} = useFetch(fetchAvailableMeals, [])
-      console.log(userMeal)
+  const {fetchedData: userMeal, setFetchedData: setUserMeal} = useFetch(fetchAvailableMeals, {
+        items: [],
+        customer: {
+            email: '',
+            name: '',
+            street: '',
+            city: ''
+        }
+    } )
+      // console.log(userMeal)
+
   
       async function handleSelectMeal(selectedMeal) {
+        
           setUserMeal((prevPickedMeal) => {
               if(!prevPickedMeal){
-                  prevPickedMeal = [];
+                  prevPickedMeal = {
+        items: [],
+        customer: {
+            email: '',
+            name: '',
+            street: '',
+            city: ''
+        }
+    };
               }
-              if(prevPickedMeal.includes((meal)=>meal.id === selectedMeal.id)){
-                  return prevPickedMeal;
+              const newMeal = {
+                id: selectedMeal.id,
+                name: selectedMeal.name,
+                price: selectedMeal.price
               }
-              return [selectedMeal, ...prevPickedMeal]
+              return {
+                ...prevPickedMeal,
+                items: [newMeal, ...prevPickedMeal.items]
+              }
           });
-
-          try{
-            await selectedOrders([selectedMeal, ...userMeal])
-          }catch(error){
-            setUserMeal(userMeal);
-            console.log(error)
-          }
       }
 
+      const ctxValue = {
+        meals: userMeal.items,
+        addingMeal :handleSelectMeal
+      }
   return (
     <>
+    <OrderContext.Provider value={ctxValue}>
       <Header />
       <Products onSelectMeal={handleSelectMeal}/>
+    </OrderContext.Provider>
     </>
   );
 }
