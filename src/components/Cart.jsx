@@ -14,8 +14,11 @@ export default function Cart(){
     //     setValue(1)
     // }
 
-    function handleAddingMoreMeal(){
+    function handleAddingQuantity(){
         setValue((prevValue)=>prevValue = prevValue + 1)
+    }
+    function handleDecreasingQuantity(){
+        setValue((prevValue)=>prevValue = prevValue - 1)
     }
 
     console.log(meals);
@@ -26,9 +29,9 @@ export default function Cart(){
                 <li key={meal.id} className="cart-item">
                         <p>{meal.name}</p>
                         <div className="cart-item-actions">
-                            <button>-</button>
+                            <button onClick={()=>handleDecreasingQuantity()}>-</button>
                             {value}
-                            <button onClick={()=>handleAddingMoreMeal()}>+</button>
+                            <button onClick={()=>handleAddingQuantity()}>+</button>
                         </div>
                 </li>
             ))}
