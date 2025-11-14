@@ -8,6 +8,9 @@ const CartModal = forwardRef(function Modal({title, actions},ref){
         return {
             open: ()=>{
                 dialog.current.showModal()
+            },
+            close: ()=>{
+                dialog.current.close();
             }
         }
     })

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Header from "./components/Header.jsx";
 import { OrderContext } from "./components/MealContext.jsx";
 import Products from "./components/Products.jsx";
@@ -5,7 +6,9 @@ import useFetch from "./hooks/useFetch.js";
 import { fetchAvailableMeals } from "./http.js";
 
 function App() {
-  const {fetchedData: userMeal, setFetchedData: setUserMeal} = useFetch(fetchAvailableMeals, {
+  // const {fetchedData: userMeal, setFetchedData: setUserMeal} = useFetch(fetchAvailableMeals, [])
+
+  const [userSelectedMeal, setUserSelectedMeal] = useState({
         items: [],
         customer: {
             email: '',
@@ -19,7 +22,7 @@ function App() {
   
       async function handleSelectMeal(selectedMeal) {
         
-          setUserMeal((prevPickedMeal) => {
+          setUserSelectedMeal((prevPickedMeal) => {
               if(!prevPickedMeal){
                   prevPickedMeal = {
         items: [],
@@ -44,7 +47,7 @@ function App() {
       }
 
       const ctxValue = {
-        meals: userMeal.items,
+        meals: userSelectedMeal.items,
         addingMeal :handleSelectMeal
       }
   return (

@@ -1,10 +1,26 @@
 import { useRef } from "react";
 import CartModal from "./CartModal.jsx";
+import { useContext } from "react";
+import { OrderContext } from "./MealContext.jsx";
 
 export default function Header(){
     const modal = useRef();
+    const {meals} = useContext(OrderContext);
     function handleOpenCartClick(){
         modal.current.open();
+    }
+
+    let cartQuantity = meals.length;
+
+    let modalAction = <button>Close</button>;
+
+    if(cartQuantity>0){
+        modalAction = (
+            <>
+            <button>Close</button>
+            <button>Checkout</button>
+            </>
+        );
     }
 
 
@@ -13,6 +29,7 @@ export default function Header(){
         <CartModal 
         ref={modal}
         title="your cart"
+        actions= {modalAction}
         />
         <section id="main-header">
             <div id="title">
