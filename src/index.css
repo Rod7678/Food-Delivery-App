@@ -135,17 +135,19 @@ h1 {
 .cart-total {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin: 2rem 0;
   font-size: 1.15rem;
   font-weight: bold;
   color: #46443c;
+  padding-inline-start: 0px !important;
 }
 
 .cart-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  column-gap: 50px;
   margin: 0.5rem 0;
 }
 

@@ -1,12 +1,24 @@
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { OrderContext } from "./MealContext"
 
 
 
 
 export default function Cart(){
+
+    const [value, setValue] = useState(1);
     const {meals} = useContext(OrderContext);
-    console.log(meals)
+    let cartQuantity = meals.length;
+    console.log(cartQuantity);
+    // if(cartQuantity>0){
+    //     setValue(1)
+    // }
+
+    function handleAddingMoreMeal(){
+        setValue((prevValue)=>prevValue = prevValue + 1)
+    }
+
+    console.log(meals);
     return (
         <>
         <ul className="cart-total">
@@ -15,7 +27,8 @@ export default function Cart(){
                         <p>{meal.name}</p>
                         <div className="cart-item-actions">
                             <button>-</button>
-                            <button>+</button>
+                            {value}
+                            <button onClick={()=>handleAddingMoreMeal()}>+</button>
                         </div>
                 </li>
             ))}

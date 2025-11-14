@@ -17,8 +17,8 @@ export default function Header(){
     if(cartQuantity>0){
         modalAction = (
             <>
-            <button>Close</button>
-            <button>Checkout</button>
+            <button className="text-button">Close</button>
+            <button className="text-button">Checkout</button>
             </>
         );
     }
@@ -28,7 +28,7 @@ export default function Header(){
         <>
         <CartModal 
         ref={modal}
-        title="your cart"
+        title="Your Cart"
         actions= {modalAction}
         />
         <section id="main-header">
