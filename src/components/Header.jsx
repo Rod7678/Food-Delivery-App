@@ -36,7 +36,7 @@ export default function Header(){
                 <img src={"/logo.jpg"} alt="" />
                 <h1>Rodfood</h1>
             </div>
-            <button className="button" onClick={handleOpenCartClick}>Cart</button>
+            <button className="button" onClick={handleOpenCartClick}>Cart({cartQuantity})</button>
         </section>
         </>
     )
