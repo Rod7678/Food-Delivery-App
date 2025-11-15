@@ -2,5 +2,7 @@ import { createContext } from "react";
 
 export const OrderContext= createContext({
     meals: [],
-    addingMeal : ()=>{}
+    addingMeal : ()=>{},
+    addingQuantity :()=>{},
+    decreaseQuantity :()=>{}
 });

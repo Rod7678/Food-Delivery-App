@@ -134,8 +134,7 @@ h1 {
 
 .cart-total {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin: 2rem 0;
   font-size: 1.15rem;
   font-weight: bold;

@@ -1,19 +1,23 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { OrderContext } from "./MealContext"
 
 
 
 
 export default function Cart(){
-
     const [value, setValue] = useState(1);
+    const [total, setTotal] = useState(0);
     const {meals} = useContext(OrderContext);
-    let cartQuantity = meals.length;
-    console.log(cartQuantity);
-    // if(cartQuantity>0){
-    //     setValue(1)
-    // }
 
+    const totalValue = meals.map((meal)=>parseInt(meal.price)).reduce((acc, curr) =>{return acc + curr},0);
+    useEffect(()=>{
+        setTotal(()=>{
+            return totalValue;
+        })
+    },[totalValue])
+    // console.log(totalValue);
+
+    
     function handleAddingQuantity(){
         setValue((prevValue)=>prevValue = prevValue + 1)
     }
@@ -21,13 +25,13 @@ export default function Cart(){
         setValue((prevValue)=>prevValue = prevValue - 1)
     }
 
-    console.log(meals);
+
     return (
-        <>
-        <ul className="cart-total">
+        <div className="cart">
+        <ul >
             {meals.map((meal)=>(
                 <li key={meal.id} className="cart-item">
-                        <p>{meal.name}</p>
+                        <p>{meal.name}-x{meal.price}</p>
                         <div className="cart-item-actions">
                             <button onClick={()=>handleDecreasingQuantity()}>-</button>
                             {value}
@@ -35,7 +39,8 @@ export default function Cart(){
                         </div>
                 </li>
             ))}
+            <p className="cart-total">${total}</p>
         </ul>
-        </>
+        </div>
     )
 }

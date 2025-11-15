@@ -20,7 +20,7 @@ const CartModal = forwardRef(function Modal({title, actions},ref){
         <dialog id="cart" ref={dialog}>
             <h2>{title}</h2>
             <Cart />
-            <form method="dialog" id="modal-actions">
+            <form method="dialog" id="modal-actions" className="cart-total">
                 {actions}
             </form>
         </dialog>,
