@@ -12,20 +12,22 @@ export const OrderContext= createContext({
 function mealCartReducer(state, action){
     switch(action.type){
         case "ADD_ORDER":{
-            const { id, meal } = action.payload;
+            const { id, meal } = action.payload || {};
             if(!id || !meal) return state;
             
             const updateMeals = [...state.meals];
             const existingItemIndex = updateMeals.findIndex((m)=>m.id === id);
 
             if(existingItemIndex !== -1){
-                const existing = updateMeals[existingItemIndex];
-                updateMeals[existingItemIndex]= {...existing, quantity: existing.quantity +1}
+                const existing = {...updateMeals[existingItemIndex]};
+                const qty = Number.isFinite(existing.quantity) ? existing.quantity : Number(existing.quantity) || 0;
+                existing.quantity = qty + 1; 
+                updateMeals[existingItemIndex]= existing
             }else{
                 updateMeals.push({
                     id,
                     name: meal.name,
-                    price: meal.price,
+                    price: Number(meal.price) || 0,
                     quantity: 1
                 });
             }
@@ -37,15 +39,31 @@ function mealCartReducer(state, action){
         }
 
         case "UPDATE_ORDER":{
-            const {productId, amount} = action.payload;
+            const payload = action.payload || {};
+
+            const productId = payload.productId;
+            const amount = typeof payload.amount === "number" ? payload.amount : Number(payload.amount);
+
+            if(!productId || !Number.isFinite(amount)){
+                console.warn("UPDATE_ORDER ignored — invalid payload:", payload);
+                return state;
+            }
             const updateMeals = [...state.meals];
             const idx = updateMeals.findIndex((m)=>m.id === productId);
 
-            if(idx !== -1) return state
-            const updated = {...updateMeals[idx], quantity: updateMeals[idx].quantity + amount};
-            if(updated.quantity <= 0){
+            if(idx === -1){
+                console.warn("UPDATE_ORDER ignored — invalid payload:", payload);
+                return state;
+            }
+
+            
+            const updated = {...updateMeals[idx]};
+            const currentQty = Number.isFinite(updated.quantity) ? updated.quantity : Number(updated.quantity) || 0;
+            const newQty = currentQty + amount;
+            if(newQty <= 0){
                 updateMeals.splice(idx, 1);
             }else{
+                updated.quantity = newQty;
                 updateMeals[idx]=updated;
             }
             
@@ -60,11 +78,11 @@ function mealCartReducer(state, action){
 export default function OrderContextProvider({children}){
     const {fetchedData: meals} = useFetch(fetchAvailableMeals, []);
     const [mealCartState, mealCartDispach] = useReducer(mealCartReducer, {
-        meals: [],
+        meals: []
     })
 
     function handleAddItemCart(id){
-        if(!id) return;
+         if(!id) return;
         const meal = meals.find((m)=>m.id === id);
         if(!meal){
             console.warn("Tried to add meal before meals were loaded or invalid id:", id);
@@ -80,14 +98,11 @@ export default function OrderContextProvider({children}){
     }
 
     function handleUpdateCartMealQuantity(productId, amount){
-
-        if(!productId || typeof amount !== "number") return;
-
         mealCartDispach({
             type: "UPDATE_ORDER",
             payload: {
                 productId,
-                amount
+                amount: Number(amount)
             }
         });
     }
@@ -97,7 +112,7 @@ export default function OrderContextProvider({children}){
         meals: mealCartState.meals,
         addMealCart: handleAddItemCart,
         updateMealQuantity: handleUpdateCartMealQuantity
-    }),[mealCartState.meals, meals,]);
+    }),[mealCartState.meals, meals]);
 
     return <OrderContext.Provider value={ctxValue}>
         {children}
