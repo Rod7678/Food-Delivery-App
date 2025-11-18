@@ -1,34 +1,34 @@
 import { useContext, useMemo } from "react";
 import { OrderContext } from "./MealContext";
 import Input from "./Input.jsx";
-import useFetch from "../hooks/useFetch.js";
+import { useInput } from "../hooks/useFetch.js";
 
 export default function CustomerCheckout() {
      const {enteredValue: nameValue,
     handleInputChanges: handleNameChange,
     handleInputBlur: handleNameBlur,
     hasError: nameIsValid
-  } = useFetch('');
+  } = useInput('');
      const {enteredValue: emailValue,
     handleInputChanges: handleEmailChange,
     handleInputBlur: handleEmailBlur,
     hasError: emailIsValid
-  } = useFetch('');
+  } = useInput('');
      const {enteredValue: streetValue,
     handleInputChanges: handleStreetChange,
     handleInputBlur: handleStreetBlur,
     hasError: streetIsValid
-  } = useFetch('');
+  } = useInput('');
      const {enteredValue: postalValue,
     handleInputChanges: handlePostalChange,
     handleInputBlur: handlePostalBlur,
     hasError: postalIsValid
-  } = useFetch('');
+  } = useInput('');
      const {enteredValue: cityValue,
     handleInputChanges: handleCityChange,
     handleInputBlur: handleCityBlur,
     hasError: cityIsValid
-  } = useFetch('');
+  } = useInput('');
 
       const { meals = [] } = useContext(OrderContext);
     
@@ -57,7 +57,7 @@ export default function CustomerCheckout() {
             onBlur={handleNameBlur} 
             onChange={handleNameChange} 
             value={nameValue} 
-            error={emailIsValid && 'please enter valid email'}
+            error={nameIsValid && 'please enter valid email'}
             required/>
             <Input 
             id={"email"} 
