@@ -2,7 +2,7 @@
 import { useContext, useMemo } from "react";
 import { OrderContext } from "./MealContext";
 
-export default function Cart() {
+export default function Cart({actions}) {
   const { meals = [], updateMealQuantity } = useContext(OrderContext);
 
   const totalValue = useMemo(() => {
@@ -55,6 +55,9 @@ export default function Cart() {
       </ul>
 
       <p className="cart-total">Total: {formattedTotalPrice}</p>
+      <form method="dialog" id="modal-actions" className="cart-total">
+                {actions}
+      </form>
     </div>
   );
 }

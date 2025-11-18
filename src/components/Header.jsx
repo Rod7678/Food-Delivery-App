@@ -1,12 +1,17 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import CartModal from "./CartModal.jsx";
 import { useContext } from "react";
 import { OrderContext } from "./MealContext.jsx";
 
 export default function Header(){
     const modal = useRef();
+    const [modalValue, setModalValue] = useState(false)
     const {meals} = useContext(OrderContext);
     function handleOpenCartClick(){
+        modal.current.open();
+    }
+    function handleOpenCheckOut(){
+        setModalValue(true);
         modal.current.open();
     }
 
@@ -18,7 +23,9 @@ export default function Header(){
         modalAction = (
             <>
             <button className="text-button">Close</button>
-            <button className="text-button">Checkout</button>
+            {!modalValue && <button className="text-button" onClick={()=>handleOpenCheckOut()}>Checkout</button>}
+            {modalValue && <button className="text-button">Submit Order</button>}
+            
             </>
         );
     }
@@ -30,6 +37,7 @@ export default function Header(){
         ref={modal}
         title="Your Cart"
         actions= {modalAction}
+        modalValue = {modalValue}
         />
         <section id="main-header">
             <div id="title">
