@@ -15,6 +15,7 @@ export default function Header(){
         modal.current.open();
     }
 
+    
     let cartQuantity = meals.length;
 
     let modalAction = <button>Close</button>;

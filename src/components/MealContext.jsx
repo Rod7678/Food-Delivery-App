@@ -1,4 +1,4 @@
-import { createContext, useMemo, useReducer } from "react";
+import { createContext, useMemo, useReducer, useState } from "react";
 import useFetch from "../hooks/useFetch";
 import { fetchAvailableMeals } from "../http";
 
@@ -6,6 +6,16 @@ export const OrderContext= createContext({
     meals: [],
     addMealCart : ()=>{},
     updateMealQuantity : ()=>{},
+    orders: {
+        items : [],
+        customer: {
+            email: '',
+            name: '',
+            street: '',
+            city: ''
+        }
+    },
+    submitData: ()=>{}
 });
 
 
@@ -77,6 +87,14 @@ function mealCartReducer(state, action){
 
 export default function OrderContextProvider({children}){
     const {fetchedData: meals} = useFetch(fetchAvailableMeals, []);
+    const [order, setOrder]= useState({
+        items : [],
+        customer: {
+            email: '',
+            name: '',
+            street: '',
+            city: ''
+        }})
     const [mealCartState, mealCartDispach] = useReducer(mealCartReducer, {
         meals: []
     })
@@ -107,10 +125,18 @@ export default function OrderContextProvider({children}){
         });
     }
 
+
+    function handleCheckoutSubmit(customerDetails){
+        
+    }
+
+
     const ctxValue = useMemo(()=>({
         meals: mealCartState.meals,
         addMealCart: handleAddItemCart,
-        updateMealQuantity: handleUpdateCartMealQuantity
+        updateMealQuantity: handleUpdateCartMealQuantity,
+        orders: order,
+        submitData: handleCheckoutSubmit
     }),[mealCartState.meals, meals]);
 
     return <OrderContext.Provider value={ctxValue}>

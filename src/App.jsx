@@ -13,39 +13,6 @@ function App() {
   //           city: ''
   //       }
   //   } )
-      // console.log(userMeal)
-
-  
-    //   async function handleSelectMeal(selectedMeal) {
-        
-    //       setUserSelectedMeal((prevPickedMeal) => {
-    //           if(!prevPickedMeal){
-    //               prevPickedMeal = {
-    //     items: [],
-    //     customer: {
-    //         email: '',
-    //         name: '',
-    //         street: '',
-    //         city: ''
-    //     }
-    // };
-    //           }
-    //           const newMeal = {
-    //             id: selectedMeal.id,
-    //             name: selectedMeal.name,
-    //             price: selectedMeal.price
-    //           }
-    //           return {
-    //             ...prevPickedMeal,
-    //             items: [newMeal, ...prevPickedMeal.items]
-    //           }
-    //       });
-    //   }
-
-    //   const ctxValue = {
-    //     meals: userSelectedMeal.items,
-    //     addingMeal :handleSelectMeal
-    //   }
   return (
     <>
     <OrderContextProvider>
