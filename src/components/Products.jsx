@@ -1,16 +1,18 @@
-import Meal from "./Meal";
+import Meal from "./Meal.jsx";
 import useFetch from "../hooks/useFetch.js";
 import { fetchAvailableMeals } from "../http.js";
 
 
 export default function Products(){
     const {fetchedData: meals} = useFetch(fetchAvailableMeals, [])
-    // const {meals} = useContext(OrderContext);
-    console.log(meals)    
+    // console.log(meals)    
     return (
-        <>
-        <Meal meals={meals}/>
-        </>
+        <ul id="meals">
+            {meals.length === 0 && <p>no selected meal</p>}
+            {meals.map((meal)=>(
+                <Meal meal={meal}/>
+            ))}
+        </ul>
 
     )
 }

@@ -1,9 +1,13 @@
 // Cart.jsx
 import { useContext, useMemo } from "react";
-import { OrderContext } from "./MealContext";
+import { OrderContext } from "./store/MealContext";
+import Modal from "./UI/Modal";
+import Button from "./UI/Button";
+import UserProgressContext from "./store/UserProgressContext";
 
-export default function Cart({actions}) {
+export default function Cart() {
   const { meals = [], updateMealQuantity } = useContext(OrderContext);
+  const userProgressCtx = useContext(UserProgressContext);
 
   const totalValue = useMemo(() => {
     return meals.reduce((acc, meal) => {
@@ -15,10 +19,17 @@ export default function Cart({actions}) {
 
   const formattedTotalPrice = `$${totalValue.toFixed(2)}`;
 
+  function handleCloseCart(){
+    userProgressCtx.hideCart();
+  }
+  function handleCheckout(){
+    userProgressCtx.showCheckOut();
+  }
+
   if (!meals.length) return <div className="cart">Your cart is empty</div>;
 
   return (
-    <div className="cart">
+    <Modal className="cart" open={userProgressCtx.progress === 'cart'}>
       <h2>Your Cart</h2>
       <ul>
         {meals.map((meal) => {
@@ -56,9 +67,10 @@ export default function Cart({actions}) {
       </ul>
 
       <p className="cart-total">Total: {formattedTotalPrice}</p>
-      <form method="dialog" id="modal-actions" className="cart-total">
-                {actions}
-      </form>
-    </div>
+      <p className="modal-actions">
+        <Button txtOnly={true} onClick={handleCloseCart}>Close</Button>
+        <Button  onClick={handleCheckout}>Go To Checkout</Button>
+      </p>
+    </Modal>
   );
 }

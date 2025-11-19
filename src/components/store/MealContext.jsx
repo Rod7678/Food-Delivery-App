@@ -1,6 +1,6 @@
 import { createContext, useMemo, useReducer, useState } from "react";
-import useFetch from "../hooks/useFetch";
-import { fetchAvailableMeals } from "../http";
+import useFetch from "../../hooks/useFetch";
+import { fetchAvailableMeals } from "../../http";
 
 export const OrderContext= createContext({
     meals: [],
@@ -141,6 +141,7 @@ export default function OrderContextProvider({children}){
                 }
             }
         })
+        console.log(order)
     }
 
 

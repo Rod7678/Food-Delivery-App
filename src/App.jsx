@@ -1,6 +1,9 @@
 import Header from "./components/Header.jsx";
-import OrderContextProvider from "./components/MealContext.jsx";
+import OrderContextProvider from "./components/store/MealContext.jsx";
 import Products from "./components/Products.jsx";
+import { UserProgressContextProvider } from "./components/store/UserProgressContext.jsx";
+import Cart from "./components/Cart.jsx";
+import CustomerCheckout from "./components/CustomerCheckout.jsx";
 function App() {
 
   // const [userSelectedMeal, setUserSelectedMeal] = useState({
@@ -13,12 +16,14 @@ function App() {
   //       }
   //   } )
   return (
-    <>
+    <UserProgressContextProvider>
     <OrderContextProvider>
       <Header />
       <Products/>
+      <Cart />
+      <CustomerCheckout />
     </OrderContextProvider>
-    </>
+    </UserProgressContextProvider>
   );
 }
 
