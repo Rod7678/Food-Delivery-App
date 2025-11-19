@@ -3,7 +3,6 @@ import { OrderContext } from "./store/MealContext";
 import Button from "./UI/Button";
 
 export default function Meal({meal}){
-    // console.log(meals);
     const {addMealCart}= useContext(OrderContext);
     return (
     <li key={meal.id} className="meal-item">

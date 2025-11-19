@@ -5,17 +5,7 @@ import { fetchAvailableMeals } from "../../http";
 export const OrderContext= createContext({
     meals: [],
     addMealCart : ()=>{},
-    updateMealQuantity : ()=>{},
-    orders: {
-        items : [],
-        customer: {
-            email: '',
-            name: '',
-            street: '',
-            city: ''
-        }
-    },
-    submitData: ()=>{}
+    updateMealQuantity : ()=>{}
 });
 
 
@@ -87,15 +77,7 @@ function mealCartReducer(state, action){
 
 export default function OrderContextProvider({children}){
     const {fetchedData: meals} = useFetch(fetchAvailableMeals, []);
-    const [order, setOrder]= useState({
-        items : [],
-        customer: {
-            email: '',
-            name: '',
-            street: '',
-            postalCode: '',
-            city: ''
-        }})
+    //  const {fetchedData: meals, isFetching, error} = useFetch('http://localhost:3000/meals');  
     const [mealCartState, mealCartDispach] = useReducer(mealCartReducer, {
         meals: []
     })
@@ -127,30 +109,13 @@ export default function OrderContextProvider({children}){
     }
 
 
-    function handleCheckoutSubmit(customerDetails){
-        setOrder((prevData)=>{
-            return {
-                ...prevData,
-                items: mealCartState.meals,
-                customer: {
-                    email: customerDetails.email,
-                    name: customerDetails.name,
-                    street: customerDetails.street,
-                    postalCode: customerDetails.postalCode,
-                    city: customerDetails.city
-                }
-            }
-        })
-        console.log(order)
-    }
+  
 
 
     const ctxValue = useMemo(()=>({
         meals: mealCartState.meals,
         addMealCart: handleAddItemCart,
         updateMealQuantity: handleUpdateCartMealQuantity,
-        orders: order,
-        submitData: handleCheckoutSubmit
     }),[mealCartState.meals, meals]);
 
     return <OrderContext.Provider value={ctxValue}>

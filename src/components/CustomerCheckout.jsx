@@ -1,19 +1,14 @@
-import { useContext, useMemo, useRef } from "react";
+import { useContext, useMemo } from "react";
 import { OrderContext } from "./store/MealContext.jsx";
 import Input from "./Input.jsx";
-import { selectedOrders } from "../http.js";
 import Modal from "./UI/Modal.jsx";
 import UserProgressContext from "./store/UserProgressContext.jsx";
 import Button from "./UI/Button.jsx";
 
 export default function CustomerCheckout() {
-  const { meals = [], submitData, orders } = useContext(OrderContext);
+  const { meals = [] } = useContext(OrderContext);
   const userProgressCtx = useContext(UserProgressContext);
-  const name = useRef();
-  const email = useRef();
-  const street = useRef();
-  const postalCode = useRef();
-  const city = useRef();
+
   const totalValue = useMemo(() => {
     return meals.reduce((acc, meal) => {
       const price = Number.parseFloat(meal.price || 0) || 0;
@@ -27,74 +22,61 @@ export default function CustomerCheckout() {
   function handleCloseCheckout(){
     userProgressCtx.hideCheckOut();
   }
-  async function handleSubmitOrder(event){
+  function handleSubmitOrder(event){
       event.preventDefault();
-      const enteredName = name.current.value;
-      const enteredEmail = email.current.value;
-      const enteredStreet = street.current.value;
-      const enteredPostalCode = postalCode.current.value;
-      const enteredCity = city.current.value;
-      const order = {
-          email: enteredEmail,
-          name: enteredName,
-          street: enteredStreet,
-          postalCode: enteredPostalCode,
-          city: enteredCity
-      }
-      console.log(orders)
-      submitData(order)
-      // try{
-      //     await selectedOrders(orders)
-      // }catch(error){
-      //     console.log(error)
-      //   }
+
+      const fd = new FormData(event.target);
+      const customerData = Object.fromEntries(fd.entries());
+
+      fetch('http://localhost:3000/orders',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          order: {
+            items: meals,
+            customer: customerData
+          }
+        }),
+    });
     }
 
     return (
-        <Modal className="cart" open={userProgressCtx.progress === 'checkout'}>
+      <Modal className="cart" open={userProgressCtx.progress === 'checkout'} onClose={onclose}>
+        <form onSubmit={handleSubmitOrder}>
         <h2>Checkout</h2>
         <p>Total amount: {formattedTotalPrice}</p>
-        <form onSubmit={handleSubmitOrder}>
             <Input 
-            id={"full-name"} 
+            id={"name"} 
             label={"Full Name"} 
-            name="full-name" 
             type="text"
-            ref={name}
-            required/>
+            />
             <Input 
             id={"email"} 
             label={"Email Address"} 
-            name="email" 
             type="email" 
-            ref={email}
-            required/>
+            />
             <Input 
             id={"street"} 
-            label={"Street"} 
-            name="street" 
+            label={"Street"}
             type="text" 
-            ref={street}
-            required/>
+            />
             <div className="control-row">
                 <Input 
                 id={"postal-code"} 
                 label={"postal code"} 
-                name="postal-code" 
                 type="number" 
-                ref={postalCode}
-                required/>
+                />
                 <Input 
                 id={"city"} 
                 label={"City"} 
-                name="city" 
                 type="text" 
-                ref={city}
-                required />
+                />
             </div>
-            <p className="form-actions">
-              <Button txtOnly={true} onClick={handleCloseCheckout}>close</Button>
-              <Button>Checkout</Button>
+            <p className="modal-actions">
+              <Button type="button" txtOnly={true} onClick={handleCloseCheckout}>close</Button>
+              <Button>submit order</Button>
             </p>
         </form>
         </Modal>
