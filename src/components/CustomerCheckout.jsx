@@ -1,36 +1,16 @@
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useRef } from "react";
 import { OrderContext } from "./MealContext";
 import Input from "./Input.jsx";
-import { useInput } from "../hooks/useFetch.js";
+import { selectedOrders } from "../http.js";
 
 export default function CustomerCheckout() {
-     const {enteredValue: nameValue,
-    handleInputChanges: handleNameChange,
-    handleInputBlur: handleNameBlur,
-    hasError: nameIsValid
-  } = useInput('');
-     const {enteredValue: emailValue,
-    handleInputChanges: handleEmailChange,
-    handleInputBlur: handleEmailBlur,
-    hasError: emailIsValid
-  } = useInput('');
-     const {enteredValue: streetValue,
-    handleInputChanges: handleStreetChange,
-    handleInputBlur: handleStreetBlur,
-    hasError: streetIsValid
-  } = useInput('');
-     const {enteredValue: postalValue,
-    handleInputChanges: handlePostalChange,
-    handleInputBlur: handlePostalBlur,
-    hasError: postalIsValid
-  } = useInput('');
-     const {enteredValue: cityValue,
-    handleInputChanges: handleCityChange,
-    handleInputBlur: handleCityBlur,
-    hasError: cityIsValid
-  } = useInput('');
-
-      const { meals = [] } = useContext(OrderContext);
+  
+  const name = useRef();
+  const email = useRef();
+  const street = useRef();
+  const postalCode = useRef();
+  const city = useRef();
+      const { meals = [], submitData, orders } = useContext(OrderContext);
     
       const totalValue = useMemo(() => {
         return meals.reduce((acc, meal) => {
@@ -42,42 +22,54 @@ export default function CustomerCheckout() {
     
       const formattedTotalPrice = `$${totalValue.toFixed(2)}`;
 
-
+    async function handleSubmitOrder(event){
+        event.preventDefault();
+        const enteredName = name.current.value;
+        const enteredEmail = email.current.value;
+        const enteredStreet = street.current.value;
+        const enteredPostalCode = postalCode.current.value;
+        const enteredCity = city.current.value;
+        const order = {
+            email: enteredEmail,
+            name: enteredName,
+            street: enteredStreet,
+            postalCode: enteredPostalCode,
+            city: enteredCity
+        }
+        console.log(order)
+        submitData(order)
+        try{
+            await selectedOrders(orders)
+        }catch(error){
+            console.log(error)
+          }
+      }
 
     return (
         <div className="cart">
         <h2>Checkout</h2>
         <p>Total amount: {formattedTotalPrice}</p>
-        <form>
+        <form onSubmit={handleSubmitOrder}>
             <Input 
             id={"full-name"} 
             label={"Full Name"} 
             name="full-name" 
             type="text"
-            onBlur={handleNameBlur} 
-            onChange={handleNameChange} 
-            value={nameValue} 
-            error={nameIsValid && 'please enter valid email'}
+            ref={name}
             required/>
             <Input 
             id={"email"} 
             label={"Email Address"} 
             name="email" 
             type="email" 
-            onBlur={handleEmailBlur} 
-            onChange={handleEmailChange} 
-            value={emailValue}
-            error={emailIsValid && 'please enter valid email'} 
+            ref={email}
             required/>
             <Input 
             id={"street"} 
             label={"Street"} 
             name="street" 
             type="text" 
-            onBlur={handleStreetBlur} 
-            onChange={handleStreetChange} 
-            value={streetValue} 
-            error={streetIsValid && 'please enter valid email'}
+            ref={street}
             required/>
             <div className="control-row">
                 <Input 
@@ -85,22 +77,20 @@ export default function CustomerCheckout() {
                 label={"postal code"} 
                 name="postal-code" 
                 type="number" 
-                onBlur={handlePostalBlur} 
-                onChange={handlePostalChange} 
-                value={postalValue} 
-                error={postalIsValid && 'please enter valid email'}
+                ref={postalCode}
                 required/>
                 <Input 
                 id={"city"} 
                 label={"City"} 
                 name="city" 
                 type="text" 
-                onBlur={handleCityBlur} 
-                onChange={handleCityChange} 
-                value={cityValue} 
-                error={cityIsValid && 'please enter valid email'}
+                ref={city}
                 required />
             </div>
+            <p className="form-actions">
+              <button className="button button-flat">Reset</button>
+              <button className="button">Checkout</button>
+            </p>
         </form>
         </div>
     )

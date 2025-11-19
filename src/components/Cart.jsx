@@ -19,6 +19,7 @@ export default function Cart({actions}) {
 
   return (
     <div className="cart">
+      <h2>Your Cart</h2>
       <ul>
         {meals.map((meal) => {
           const price = Number.parseFloat(meal.price || 0) || 0;

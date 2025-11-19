@@ -3,7 +3,7 @@ import { createPortal } from "react-dom"
 import Cart from "./Cart";
 import CustomerCheckout from "./CustomerCheckout.jsx";
 
-const CartModal = forwardRef(function Modal({title, actions, modalValue},ref){
+const CartModal = forwardRef(function Modal({actions, modalValue},ref){
     const dialog = useRef()
     useImperativeHandle(ref, ()=>{
         return {
@@ -15,11 +15,10 @@ const CartModal = forwardRef(function Modal({title, actions, modalValue},ref){
             }
         }
     })
-    console.log(modalValue)
+    // console.log(modalValue)
 
     return createPortal(
         <dialog id="cart" ref={dialog}>
-            <h2>{title}</h2>
             {!modalValue && <Cart actions={actions}/>}
             {modalValue && 
             <CustomerCheckout/>

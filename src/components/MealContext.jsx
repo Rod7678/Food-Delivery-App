@@ -93,6 +93,7 @@ export default function OrderContextProvider({children}){
             email: '',
             name: '',
             street: '',
+            postalCode: '',
             city: ''
         }})
     const [mealCartState, mealCartDispach] = useReducer(mealCartReducer, {
@@ -127,7 +128,19 @@ export default function OrderContextProvider({children}){
 
 
     function handleCheckoutSubmit(customerDetails){
-        
+        setOrder((prevData)=>{
+            return {
+                ...prevData,
+                items: mealCartState.meals,
+                customer: {
+                    email: customerDetails.email,
+                    name: customerDetails.name,
+                    street: customerDetails.street,
+                    postalCode: customerDetails.postalCode,
+                    city: customerDetails.city
+                }
+            }
+        })
     }
 
 

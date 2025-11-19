@@ -11,7 +11,7 @@ export async function fetchAvailableMeals(){
 export async function selectedOrders(orders) {
     const responce = await fetch("http://localhost:3000/orders",{
         method: 'POST',
-        body: JSON.stringify({orders}),
+        body: JSON.stringify(orders),
         headers: {
             'Content-Type': 'application/json'
         }

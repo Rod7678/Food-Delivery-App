@@ -2,7 +2,6 @@ import Header from "./components/Header.jsx";
 import OrderContextProvider from "./components/MealContext.jsx";
 import Products from "./components/Products.jsx";
 function App() {
-  // const {fetchedData: userMeal, setFetchedData: setUserMeal} = useFetch(fetchAvailableMeals, [])
 
   // const [userSelectedMeal, setUserSelectedMeal] = useState({
   //       items: [],
