@@ -1,19 +1,17 @@
-import Meal from "./Meal.jsx";
 import useFetch from "../hooks/useFetch.js";
-import { fetchAvailableMeals } from "../http.js";
+import Error from "./Error.jsx";
+import Meal from "./Meal.jsx";
 
-// const requestConfig = {}
-export default function Products(){
-    const {fetchedData: meals} = useFetch(fetchAvailableMeals, [])
-//    const {fetchedData: meals, isFetching, error} = useFetch("http://localhost:3000/meals", requestConfig, []);
-
-   console.log(meals)
-//    if(isFetching){
-//     return <p>Fetching meals</p>
-//    } 
-//    if(!meals){
-//     return <p>No meals Found</p>
-//    }
+const requestConfig = {}
+export default function Products(){ 
+    const {data: meals, isLoading, error} = useFetch('http://localhost:3000/meals', requestConfig , []);
+    if(isLoading){
+        return <p className="center">Fething meals</p>
+    }
+    
+    if(error){
+        return <Error title="Failed to Fetch meals" message={error}/>
+    }
     return (
         <ul id="meals">
             {meals.map((meal)=>(

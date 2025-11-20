@@ -2,77 +2,48 @@ import { useCallback, useEffect, useState } from "react";
 
 async function sendHttpRequest(url, config) {
     const responce = await fetch(url, config);
-    const resData = await responce.json()
+
+    const resData = await responce.json();
     if(!responce.ok){
-        throw new Error(resData.message || "something went wrong, failed to send request");
+        throw new Error(
+            resData.message || 'Something went Wrong'
+        );
     }
 
     return resData;
 }
 
-// export default function useFetch(url, config , initialData) {
-//     const [isFetching, setIsFetching] = useState(false);
-//     const [error, setError] = useState();
-//     const [fetchedData, setFetchedData] = useState(initialData);
-
-//     const sendRequest =  useCallback(async function sendRequest() {
-//         setIsFetching(true)
-//         try{
-//             const resData = await sendHttpRequest(url, config);
-//             setFetchedData(resData);
-//         }catch(error){
-//             setError({
-//                 message : error.message || "unable to fetch data"
-//             })
-//         }
-//         setIsFetching(false)
-//     }, [url, config]) 
-
-//     useEffect(()=>{
-//         if(config && (config.method === 'GET' || !config)){
-//             sendRequest();
-//         }
-//     },[sendRequest, config])
-
-//     return {
-//         isFetching,
-//         fetchedData,
-//         error,
-//         sendRequest
-//     }
-    
-// }
-
-
-
-
-export default function useFetch(fetchFn){
-    const [isFetching, setIsFetching] = useState(false);
+export default function useFetch(url, config, initialData) {
+    const [data, setData] = useState(initialData);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
-    const [fetchedData, setFetchedData] = useState([]);
 
-    useEffect(()=>{
-        async function fetchData() {
-            setIsFetching(true);
-            try{
-                const meals = await fetchFn();
-                setFetchedData(meals);
-            }catch(error){
-                setError({
-                    message : error.message || "unable to fetch data"
-                })
-            }
+    function clearData(){
+        setData(initialData);
+    }
 
-            setIsFetching(false)
+    const sendRequest = useCallback(async function sendRequest(data) {
+        setIsLoading(true);
+        try{
+            const resData = await sendHttpRequest(url, {...config, body: data  });
+            setData(resData)
+        }catch(error){
+            setError(error.message  || 'something went wrong')
         }
+        setIsLoading(false);
+    }, [url, config]);
 
-        fetchData()
-    }, [fetchFn])
+    useEffect(() => {
+        if(config && (config.method === 'GET' || !config.method)|| !config){
+            sendRequest(); 
+        }
+    }, [sendRequest, config]);
 
     return {
-        isFetching,
-        fetchedData,
-        setFetchedData,
-        error
-    }
+        data,
+        isLoading,
+        error,
+        sendRequest,
+        clearData
+    };
 }

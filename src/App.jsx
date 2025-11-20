@@ -6,15 +6,6 @@ import Cart from "./components/Cart.jsx";
 import CustomerCheckout from "./components/CustomerCheckout.jsx";
 function App() {
 
-  // const [userSelectedMeal, setUserSelectedMeal] = useState({
-  //       items: [],
-  //       customer: {
-  //           email: '',
-  //           name: '',
-  //           street: '',
-  //           city: ''
-  //       }
-  //   } )
   return (
     <UserProgressContextProvider>
     <OrderContextProvider>
